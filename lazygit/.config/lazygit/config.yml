@@ -1,0 +1,82 @@
+# lazygit
+#
+# Schema reference: lazygit --config   (dumps the defaults for the installed
+# version, which is the only reliable source — keys move between releases).
+
+git:
+  # Delta as the diff renderer.
+  #
+  # lazygit does NOT read core.pager. It captures git's output into its own
+  # panel rather than shelling out to a pager, so the [core] pager = delta in
+  # ~/.gitconfig does nothing here and delta has to be configured separately.
+  #
+  # This is the `diffRenderers` schema, not the older `git.paging` one. The
+  # old form is silently ignored on current lazygit — you get plain diffs
+  # while believing delta is wired in.
+  #
+  #   --paging=never  is load-bearing: lazygit does its own scrolling, and
+  #                   delta trying to page inside it hangs the panel.
+  #   --syntax-theme  matches the diff body to the gruvbox theme below;
+  #                   without it delta picks its own default palette.
+  diffRenderers:
+    - type: "stdinFilter"
+      name: "delta"
+      colorArg: "always"
+      command: "delta --dark --paging=never --syntax-theme=gruvbox-dark"
+
+gui:
+  # File-type icons. Off by default; enabled here because the Nerd Fonts are
+  # already installed for starship's gruvbox-rainbow prompt.
+  # One of: '2' | '3' | '' (empty disables icons entirely).
+  nerdFontsVersion: "3"
+
+  # Gruvbox, using the exact palette from ~/.config/starship.toml so the
+  # prompt and the TUI agree:
+  #
+  #   fg0 #fbf1c7   bg1 #3c3836   bg3 #665c54
+  #   red #cc241d   green #98971a   yellow #d79921
+  #   blue #458588  purple #b16286  aqua #689d6a   orange #d65d0e
+  #
+  # Only accents are set. defaultFgColor is deliberately left alone so body
+  # text keeps inheriting the terminal's own foreground — that way this
+  # composes with whatever theme kitty is running instead of fighting it.
+  #
+  # Each entry takes at most one colour plus any number of modifiers.
+  theme:
+    # Orange for the focused border, matching the prompt's leading segment.
+    activeBorderColor:
+      - "#d65d0e"
+      - bold
+
+    inactiveBorderColor:
+      - "#665c54"
+
+    searchingActiveBorderColor:
+      - "#d79921"
+      - bold
+
+    optionsTextColor:
+      - "#458588"
+
+    # bg3 when focused, bg1 when not — the lighter background is what makes
+    # it obvious which panel the cursor is actually in.
+    selectedLineBgColor:
+      - "#665c54"
+
+    inactiveViewSelectedLineBgColor:
+      - "#3c3836"
+
+    cherryPickedCommitFgColor:
+      - "#fbf1c7"
+
+    cherryPickedCommitBgColor:
+      - "#b16286"
+
+    markedBaseCommitFgColor:
+      - "#fbf1c7"
+
+    markedBaseCommitBgColor:
+      - "#d79921"
+
+    unstagedChangesColor:
+      - "#cc241d"

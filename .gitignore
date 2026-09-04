@@ -1,0 +1,28 @@
+# Nothing generated, nothing secret. See AGENTS.md.
+#
+# Packages are added deliberately — you move a config in, and only then does
+# git see it — so this file is a safety net rather than the main mechanism.
+# Most dotfiles repos need a long ignore list because they track $HOME
+# wholesale; this one does not.
+
+# Editor and OS noise
+*.swp
+*~
+.DS_Store
+
+# Anything a tool regenerates on its own
+*.log
+*.cache
+.cache/
+
+# Secrets — belt and braces; these should never be moved in at all
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.env
+.env.*
+!.env.example
+
+# Machine-local overrides, if a package ever grows one
+*.local

@@ -1,0 +1,39 @@
+version: '3'
+
+# Taskfile for the dotfiles repo.
+#
+# Task always runs commands from the directory containing this file, so
+# `task sync` works from anywhere without a `dir:` override.
+
+tasks:
+  sync:
+    desc: 'Symlink every package into $HOME. Pass DRY=1 to preview.'
+    silent: true
+
+    preconditions:
+      - sh: 'command -v stow'
+        msg: 'stow is not installed. Run: sudo apt install stow'
+      - sh: 'ls -d */ >/dev/null 2>&1'
+        msg: 'No packages yet — nothing to sync.'
+
+    vars:
+      # `--simulate` is stow's dry run: it prints what it would link and
+      # touches nothing. Empty when DRY is unset, which Task interpolates
+      # away cleanly.
+      SIMULATE: '{{if .DRY}}--simulate{{end}}'
+
+    cmds:
+      # --restow is what makes this a *sync* rather than an install: it
+      # unstows then stows, so it both links new packages and repairs links
+      # after files move inside an existing one. Running it against a package
+      # that was never stowed is fine — the unstow half is simply a no-op.
+      #
+      # --target is given explicitly rather than relying on stow's default of
+      # "the parent of the stow directory". The default is correct only while
+      # this repo lives directly in $HOME; being explicit means a clone to
+      # ~/projects/dotfiles still links into the right place.
+      #
+      # Caveat worth knowing: this cannot clean up after a package you
+      # *delete* from the repo. The glob only sees directories that still
+      # exist, so run `stow -D <name>` before removing one.
+      - 'stow --restow --verbose --target="$HOME" {{.SIMULATE}} */'
