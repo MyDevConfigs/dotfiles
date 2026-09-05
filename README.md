@@ -78,10 +78,12 @@ Whole-directory for config you own outright. Individual files when you are
 layering your own edits on top of someone else's setup — a distro's rice, a
 starter config — and want to track only your deltas.
 
-For an individual-file package, use `--no-folding`:
+For an individual-file package, use `--no-folding`. `task sync` already
+does this for the packages named in its `NO_FOLDING` variable — `hypr` is
+the one today:
 
 ```bash
-stow --no-folding <package>
+stow --no-folding <package>     # if stowing it by hand
 ```
 
 Without it, stow links a whole directory whenever the target does not yet
@@ -122,6 +124,7 @@ dotfiles/
 | --- | --- |
 | `lazygit` | `~/.config/lazygit/` — delta as diff renderer, Nerd Font icons, gruvbox theme |
 | `tmux` | `~/.config/tmux/` — flat gruvbox bar on top (design after [tmux-dotbar](https://github.com/vaaleyard/tmux-dotbar)), tpm plugins, popups |
+| `hypr` | **one file only** — `~/.config/hypr/UserConfigs/monitors.lua`. The rest of the Hyprland rice stays untracked. |
 
 Neovim is deliberately **not** here. It lives in its own repository and is
 cloned separately.

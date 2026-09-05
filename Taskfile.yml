@@ -22,6 +22,23 @@ tasks:
       # away cleanly.
       SIMULATE: '{{if .DRY}}--simulate{{end}}'
 
+      # Packages that track individual FILES inside a directory which must
+      # itself stay untracked — `hypr` holds one file out of a rice of
+      # hundreds. These have to be stowed with --no-folding.
+      #
+      # Without it, stow links a whole directory whenever the target does
+      # not yet exist. On this machine ~/.config/hypr/UserConfigs already
+      # exists so it descends and links the single leaf either way — but on
+      # a fresh machine, before the rice is installed, it would symlink the
+      # entire UserConfigs directory into this repo and every file the rice
+      # later wrote there would land inside it.
+      #
+      # It cannot simply be applied to every package: tmux depends on
+      # ~/.config/tmux being a directory symlink so that tpm's plugin clones
+      # land inside the repo where .gitignore covers them. --no-folding
+      # there would put them outside it.
+      NO_FOLDING: 'hypr'
+
     cmds:
       # --restow is what makes this a *sync* rather than an install: it
       # unstows then stows, so it both links new packages and repairs links
@@ -36,7 +53,18 @@ tasks:
       # Caveat worth knowing: this cannot clean up after a package you
       # *delete* from the repo. The glob only sees directories that still
       # exist, so run `stow -D <name>` before removing one.
-      - 'stow --restow --verbose --target="$HOME" {{.SIMULATE}} */'
+      - |
+        folded=""; unfolded=""
+        for dir in */; do
+          pkg="${dir%/}"
+          case " {{.NO_FOLDING}} " in
+            *" $pkg "*) unfolded="$unfolded $pkg" ;;
+            *)          folded="$folded $pkg" ;;
+          esac
+        done
+        [ -n "$folded" ]   && stow --restow --verbose --target="$HOME" {{.SIMULATE}} $folded
+        [ -n "$unfolded" ] && stow --restow --no-folding --verbose --target="$HOME" {{.SIMULATE}} $unfolded
+        true
 
   setup:
     desc: 'Bootstrap what packages need beyond symlinks (tpm, plugins).'
