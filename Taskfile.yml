@@ -37,3 +37,30 @@ tasks:
       # *delete* from the repo. The glob only sees directories that still
       # exist, so run `stow -D <name>` before removing one.
       - 'stow --restow --verbose --target="$HOME" {{.SIMULATE}} */'
+
+  setup:
+    desc: 'Bootstrap what packages need beyond symlinks (tpm, plugins).'
+    silent: true
+
+    # Ordering here is load-bearing, not tidiness. tpm has to be cloned into
+    # ~/.config/tmux/plugins, and that path only resolves into this repo once
+    # `sync` has made ~/.config/tmux a symlink. Clone first and you instead
+    # create a real directory that then blocks stow — and the plugin
+    # checkouts land outside the repo, where .gitignore does not cover them.
+    deps: [sync]
+
+    vars:
+      TPM_DIR: '{{.HOME}}/.config/tmux/plugins/tpm'
+
+    cmds:
+      - |
+        if [ -d "{{.TPM_DIR}}" ]; then
+          echo "  = tpm already present"
+        else
+          echo "  > cloning tpm"
+          git clone --depth 1 https://github.com/tmux-plugins/tpm "{{.TPM_DIR}}"
+        fi
+      # install_plugins is itself idempotent — it prints "Already installed"
+      # and moves on — so this is safe to re-run.
+      - '"{{.TPM_DIR}}/bin/install_plugins"'
+      - 'echo "  reload a running tmux with: tmux source ~/.config/tmux/tmux.conf"'

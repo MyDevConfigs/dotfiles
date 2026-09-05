@@ -121,6 +121,27 @@ dotfiles/
 | Package | Deploys |
 | --- | --- |
 | `lazygit` | `~/.config/lazygit/` — delta as diff renderer, Nerd Font icons, gruvbox theme |
+| `tmux` | `~/.config/tmux/` — flat gruvbox bar on top (design after [tmux-dotbar](https://github.com/vaaleyard/tmux-dotbar)), tpm plugins, popups |
 
 Neovim is deliberately **not** here. It lives in its own repository and is
 cloned separately.
+
+#### tmux, on a new machine
+
+tpm is not vendored — plugin checkouts are gitignored, since they are
+third-party repositories rather than configuration. After `task sync`:
+
+```bash
+task setup                 # clones tpm and installs every plugin
+```
+
+`setup` depends on `sync`, and that ordering matters: tpm has to be cloned
+into `~/.config/tmux/plugins`, which only resolves into this repo once
+`sync` has made `~/.config/tmux` a symlink.
+
+`prefix` is `C-b`. Reload the config with `prefix + r` — deliberately not
+`C-r`, which belongs to atuin's history search.
+
+`vim-tmux-navigator` is half of a pair. Seamless `C-h/j/k/l` between tmux
+panes and neovim splits also needs the plugin of the same name installed on
+the neovim side, which lives in its own repo.
