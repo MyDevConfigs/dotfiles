@@ -79,8 +79,8 @@ layering your own edits on top of someone else's setup — a distro's rice, a
 starter config — and want to track only your deltas.
 
 For an individual-file package, use `--no-folding`. `task sync` already
-does this for the packages named in its `NO_FOLDING` variable — `hypr` is
-the one today:
+does this for the packages named in its `NO_FOLDING` variable — `hypr` and
+`fastfetch` today:
 
 ```bash
 stow --no-folding <package>     # if stowing it by hand
@@ -125,6 +125,7 @@ dotfiles/
 | `lazygit` | `~/.config/lazygit/` — delta as diff renderer, Nerd Font icons, gruvbox theme |
 | `tmux` | `~/.config/tmux/` — flat gruvbox bar on top (design after [tmux-dotbar](https://github.com/vaaleyard/tmux-dotbar)), tpm plugins, popups |
 | `hypr` | **one file only** — `~/.config/hypr/UserConfigs/monitors.lua`. The rest of the Hyprland rice stays untracked. |
+| `fastfetch` | **one file only** — `~/.config/fastfetch/config-pokemon.jsonc`, the layout behind the Pokemon shell greeting. The rice's own fastfetch configs stay untracked. |
 
 Neovim is deliberately **not** here. It lives in its own repository and is
 cloned separately.
