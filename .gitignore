@@ -30,3 +30,7 @@ id_ed25519*
 # tpm clones plugin repositories into the tmux config directory. They are
 # third-party checkouts, not our configuration — `prefix + I` restores them.
 tmux/.config/tmux/plugins/
+
+# The KoolDots rice writes a .backup.<name> copy beside configs it rewrites.
+# It is a generated artifact, not our configuration.
+kitty/.config/kitty/.backup.kitty.conf

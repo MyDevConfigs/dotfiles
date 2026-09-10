@@ -23,8 +23,9 @@ tasks:
       SIMULATE: '{{if .DRY}}--simulate{{end}}'
 
       # Packages that track individual FILES inside a directory which must
-      # itself stay untracked — `hypr` holds one file out of a rice of
-      # hundreds. These have to be stowed with --no-folding.
+      # itself stay untracked. Both hold one file out of a rice of hundreds:
+      # `hypr` a monitor layout, `fastfetch` the layout behind the Pokemon
+      # shell greeting. These have to be stowed with --no-folding.
       #
       # Without it, stow links a whole directory whenever the target does
       # not yet exist. On this machine ~/.config/hypr/UserConfigs already
@@ -37,7 +38,7 @@ tasks:
       # ~/.config/tmux being a directory symlink so that tpm's plugin clones
       # land inside the repo where .gitignore covers them. --no-folding
       # there would put them outside it.
-      NO_FOLDING: 'hypr'
+      NO_FOLDING: 'hypr fastfetch'
 
     cmds:
       # --restow is what makes this a *sync* rather than an install: it

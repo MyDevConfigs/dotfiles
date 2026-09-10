@@ -1,0 +1,10 @@
+# This directory is documentation, not a stow package.
+#
+# `task sync` globs every top-level */ and stows it, so without this file
+# stow would link each runbook straight into $HOME (~/hyprland-brightness.md).
+# There is no $HOME-relative tree in here to deploy — the content is meant to
+# be read in the repo.
+#
+# One regex per line, implicitly anchored. `.*` matches every entry, so stow
+# descends into this package and finds nothing to link.
+.*
